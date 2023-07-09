@@ -1,2 +1,7 @@
 Game function could be turned into a class to increase readability and
 to make it easier to increase functionaltiy of the game.
+
+
+Constants might be redundant and actually make the code harder to read.
+Also means that I use the .format syntax instead of f-strings for various
+in game strings, which is uncool.
