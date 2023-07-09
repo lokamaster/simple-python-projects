@@ -1,0 +1,2 @@
+Game function could be turned into a class to increase readability and
+to make it easier to increase functionaltiy of the game.
