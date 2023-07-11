@@ -1,0 +1,8 @@
+Overall:
+Refactor code
+Look over the use of constants strings using format(), it leads to messy code!
+
+Game related:
+Create better dialogue
+Use module random to randomise computer move
+Create prompt for player to set game rules (target, range etc.)
