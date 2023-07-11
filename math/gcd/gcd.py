@@ -2,7 +2,7 @@ GET_INTEGER = "Enter your {} number: "
 FIRST = "first"
 SECOND = "second"
 INTEGER_ERROR = "Must be an integer."
-RESULT = "The gcd({}, {}) is {} and the lcm({}, {}) is {}."
+RESULT = "The gcd({0}, {1}) is {2} and the lcm({0}, {1}) is {3}."
 
 
 def gcd(a: int, b: int) -> int:
@@ -57,7 +57,7 @@ def main() -> None:
         b = int(b)
     
     # Calculate and print result.
-    print(RESULT.format(a, b, gcd(a, b), a, b, lcm(a, b)))
+    print(RESULT.format(a, b, gcd(a, b), lcm(a, b)))
 
 
 if __name__ == "__main__":
