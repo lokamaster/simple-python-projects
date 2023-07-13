@@ -1,6 +1,7 @@
 import secrets 
 import string
 
+
 # Shell text.
 GET_LENGTH = "Enter length of password: "
 SPACE = "Shall password contain a space? y/n: "
@@ -27,7 +28,7 @@ YES = "y"
 def generate_password(
         length: int,
         space: bool = False,
-        rng:secrets.SystemRandom = RNG
+        rng: secrets.SystemRandom = RNG
 )-> str:
     """Generate password of given length.
 
@@ -57,8 +58,9 @@ def generate_password(
         ValueError
             If lenght is shorter than 4, or 5 with space.
     """
-    if length < MIN_LENGTH + space:
-        raise ValueError(LENGHT_ERROR.format(MIN_LENGTH + space))
+    min_length = MIN_LENGTH + space
+    if length < min_length:
+        raise ValueError(LENGHT_ERROR.format(min_length))
 
     # Generate password
     password = (
@@ -67,7 +69,7 @@ def generate_password(
              rng.choice(DIGIT),
              rng.choice(PUNCTUATION)]
             + ([WHITESPACE] if space else [])
-            + rng.choices(ALL, k=length - (MIN_LENGTH + space))
+            + rng.choices(ALL, k=length - (min_length))
     )
     
     # Shuffle password and make sure whitespace is not last.
