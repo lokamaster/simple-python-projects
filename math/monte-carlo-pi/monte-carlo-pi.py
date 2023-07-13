@@ -5,10 +5,10 @@ RADIUS = 1
 
 # Shell dialogue.
 INTRO = (
-        "This app will calculate the value of pi by randomly thowing darts "
-        "at a square board with side length 2.\n"
-        "Pi can be estimated by comparing the ratio of darts landing within "
-        "a unit circle to the area of the board.\n"
+    "This app will calculate the value of pi by randomly thowing darts "
+    "at a square board with side length 2.\n"
+    "Pi can be estimated by comparing the ratio of darts landing within "
+    "a unit circle to the area of the board.\n"
 )
 GET_THROWS = "Enter the number of darts to throw: "
 NUMERIC_ERROR = "Please anter an integer."
