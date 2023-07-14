@@ -98,7 +98,7 @@ def winning_strat(current: int, target: int, max_turn: int) -> int:
     """Tries to win game, if not possible it will add one.
 
     Based on the fact that the winning strategy can be recursively
-    calculated by the understaing that the player who can put the total
+    calculated by the understanding that the player who can put the total
     one more than the max turn away from the target will win the game.
 
     Example: Target is 23, max turn is 4.
@@ -124,10 +124,7 @@ def winning_strat(current: int, target: int, max_turn: int) -> int:
                             = 2
     """
     optimal_to_add = (target-current) % (max_turn + 1)
-    if optimal_to_add:
-        return optimal_to_add
-    else:
-        return 1
+    return optimal_to_add or 1  # If the optimal turn is 0, return 1.
 
 
 def main() -> None:
