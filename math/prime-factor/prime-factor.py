@@ -27,26 +27,6 @@ def prime(n: int) -> bool:
     return True
 
 
-def primes_up_to(n: int) -> list[int]:
-    """Find all primes less than or equal to n.
-
-    Parameters:
-        n : int
-            Integer to use as boundry.
-
-    Returns:
-        primes : list[int]
-            List with all ptimes less than or equal to n.
-    """
-    primes = []
-    k = 1
-    while k <= n:
-        if prime(k):
-            primes.append(k)
-        k += 1
-    return primes
-
-
 def prime_factors(n: int) -> list[int]:
     """Return list of all prime factors of n.
 
@@ -66,15 +46,15 @@ def prime_factors(n: int) -> list[int]:
         factors.append(n)
     elif n < 0:
         factors.append(-1)
-        n = -n
-    elif prime(n):
-        return list(n)
-    potential_factors = primes_up_to(n)
-    for factor in potential_factors:
-        if n % factor == 0:
+        n = -n  # Make n positive if n was negative.
+    factor = 1
+    while factor <= n:
+        if prime(factor):
+            # Keep adding factor as a factor of n while factor divides n.
             while n % factor == 0:
                 factors.append(factor)
-                n //= factor 
+                n //= factor  # Remove factor from n.
+        factor += 1
     return factors
 
 
