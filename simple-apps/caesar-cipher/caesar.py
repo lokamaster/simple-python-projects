@@ -7,6 +7,22 @@ UPPER = string.ascii_uppercase
 NUM_OF_LETTERS = 26
 
 
+def get_translation(rot: int) -> dict[str, str]:
+    """Creates a translation table with certain rotation of the alphabet.
+
+    See cipher for details.
+    """
+    lower = {
+        l: LOWER[(LOWER.index(l) + rot) % NUM_OF_LETTERS]
+        for l in LOWER
+    }
+    upper = {
+        l: UPPER[(UPPER.index(l) + rot) % NUM_OF_LETTERS]
+        for l in UPPER
+    }
+    return str.maketrans(dict(**lower, **upper))
+
+
 def cipher(message: str, rot: int) -> str:
     """Caesar cipher of message.
 
@@ -19,21 +35,12 @@ def cipher(message: str, rot: int) -> str:
         e -> f g h
         r -> s t u
         o -> p q r
-        
-        "Zero" therefore becomes "Chur" after a rotation of 3.
+    "Zero" therefore becomes "Chur" after a rotation of 3.
 
     Decipher can be made by giving a negative integer to rot.
     """ 
-    new_message = []
-    for letter in message:
-        if letter not in UPPER + LOWER:
-            new_message.append(letter)
-        elif letter in LOWER:
-            new_index = (LOWER.find(letter) + rot) % NUM_OF_LETTERS
-            new_message.append(LOWER[new_index])
-        elif letter in UPPER:
-            new_index = (UPPER.find(letter) + rot) % NUM_OF_LETTERS
-            new_message.append(UPPER[new_index])
+    translation = get_translation(rot)
+    new_message = [string.translate(translation) for string in message]
     return "".join(new_message)
 
 
