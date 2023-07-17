@@ -4,23 +4,27 @@ import string
 
 LOWER = string.ascii_lowercase
 UPPER = string.ascii_uppercase
-NUM_OF_LETTERS = 26
+CHARSET = (LOWER, UPPER)
 
 
-def get_translation(rot: int) -> dict[str, str]:
+def get_translation(rot: int) -> dict[int, str]:
     """Creates a translation table with certain rotation of the alphabet.
 
     See cipher for details.
     """
-    lower = {
-        l: LOWER[(LOWER.index(l) + rot) % NUM_OF_LETTERS]
-        for l in LOWER
-    }
-    upper = {
-        l: UPPER[(UPPER.index(l) + rot) % NUM_OF_LETTERS]
-        for l in UPPER
-    }
-    return str.maketrans(dict(**lower, **upper))
+    translation = {}
+    for charset in CHARSET:
+        charset_len = len(charset)
+        charset_translation = {
+                # Index based on current position + rotation.
+                # Modulus used in case of overflow (z -> a for example).
+                # str.translate need Unicode ordinals as keys, using ord
+                # prevents the need to use str.maketrans.
+                ord(char): charset[(charset.index(char) + rot) % charset_len]
+                for char in charset
+        }
+        translation.update(charset_translation)
+    return translation
 
 
 def cipher(message: str, rot: int) -> str:
