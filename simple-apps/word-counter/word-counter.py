@@ -12,17 +12,21 @@ def read_file(file_name: str) -> list[str]:
     return data
 
 
-def word_count(data: list[str], word: str) -> int:
+def word_count(text: str, word: str) -> int:
     """Count the occurence of given word in list.
     
     Will match exact matches, ignoring case and punctuation.  E.g. with
     word "hi" will match "Hi", "hi." and "HI!" but not "his".
     """
     regex = rf'\b{re.escape(word)}\b'
-    count = 0
-    for row in data:
-        word_in_row = len(re.findall(regex, row, re.IGNORECASE))
-        count +=  word_in_row
+    count = len(re.findall(regex, text, re.IGNORECASE))
+    return count
+
+
+def word_count_in_file(file: str, word: str) -> int:
+    """Wrapper to count occurance of word in file."""
+    data = read_file(file)
+    count = sum(word_count(row, word) for row in data)
     return count
 
 
@@ -38,11 +42,11 @@ def main() -> None:
 
     # Try to read file and count words.
     try:
-        file = read_file(arguments.filename)
+        count = word_count_in_file(arguments.filename, arguments.word)
     except FileNotFoundError:
         print("ERROR: File not found.")
     else:
-        print(word_count(file, arguments.word))
+        print(count)
 
 
 if __name__ == "__main__":
