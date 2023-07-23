@@ -41,12 +41,21 @@ def prime_factors(n: int) -> list[int]:
             - If n is 1 or 0, list will contain 1 or 0 respectively.
             - If n < 0, list will contain -1.
     """
+    # Guard if n is prime.
+    if prime(n):
+        return [n]
+
+    # Set up list of prime factors, adding -1, 0, and 1 as needed.
+    # (Yes I know they are not prime, but it makes the function return
+    # a sensible value even for non-prime integers.)
     factors = []
     if n == 1 or n == 0:
         factors.append(n)
     elif n < 0:
         factors.append(-1)
         n = -n  # Make n positive if n was negative.
+
+    # Loop to look for prime factors of n.
     factor = 1
     while factor <= n:
         if prime(factor):
@@ -54,6 +63,10 @@ def prime_factors(n: int) -> list[int]:
             while n % factor == 0:
                 factors.append(factor)
                 n //= factor  # Remove factor from n.
+                if prime(n):
+                    # If n is prime, add to list and break.
+                    factors.append(n)
+                    factor = n+1  # Breaks the outer while loop.
         factor += 1
     return factors
 
