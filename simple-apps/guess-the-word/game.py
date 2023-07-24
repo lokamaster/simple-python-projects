@@ -5,11 +5,13 @@ import ansi
 # Game constants.
 WORD_LENGTH = 5
 MAX_GUESSES = 5
-WORDS = ["snake", "quake", "makes"]
+WORDS = "words"
 
 # Dialogue constants.
 MAKE_GUESS = "Make guess: "
-MAKE_GUESS_ERROR = "Guess must be 5 letters, make new guess: "
+MAKE_GUESS_ERROR = "Guess must be a possible solution, try agian: "
+WIN = "You win! Correct word was {}."
+LOSE = "No more guesses, you lose! Correct word was {}."
 
 # Constants for functions.
 OK = 2
@@ -20,11 +22,28 @@ WRONG = 0
 WIDTH = 101
 
 
+def read_words(file_name: str) -> list[str]:
+    with open(file_name, "r") as file:
+        data = [word.lower().strip() for word in file]
+    return data
+
+
 def get_hidden_word(words: list[str]) -> str:
+    """Selects a word on random to use as hidden word."""
     return random.choice(words)
 
 
 def check_guess(guess: str, word: str) -> list[int]:
+    """Compares guess to hidden word.
+
+    Status codes returned are:
+        OK
+            Letter is correct and in correct position.
+        WRONG_PLACE
+            Letter is correct but in wrong place.
+        WRONG
+            Letter is wrong.
+    """
     return [
         OK if letter_in_guess == letter_in_word
         else WRONG_PLACE if letter_in_guess in word
@@ -33,25 +52,53 @@ def check_guess(guess: str, word: str) -> list[int]:
     ]
 
 
-def get_user_input() -> str:
+def get_user_input(words: list[str]) -> str:
+    """Get guess from user.
+
+    Makes sure guess is any of the possible words.
+    """
     guess = input(MAKE_GUESS).lower()
-    while len(guess) != WORD_LENGTH or not guess.isalpha():
+    while guess not in words:
         ansi.clear_rows(2)
         guess = input(MAKE_GUESS_ERROR)
     return guess
 
 
-def calculate_padding(string: str, width: int) -> int:
-    return (width-1)//2 - (len(string)) // 2
+def calculate_padding(string_length: int, width: int) -> int:
+    """Calculate the padding required to center a string.
+
+    This is used to caluclate the left padding required to center a
+    string to a given width.  Function can be used on strings with
+    ANSI escape code for example.
+
+    Example:
+        String of width 5, total width 10 gives padding of
+          (10-1)//2 - (5-1)//2 = 4-2
+                               = 2.
+
+        Padding can then be used as follows:
+
+        Input:
+            print("-"*10)
+            print(" "*2 + "string")
+            print("-"*10)
+
+        Output:
+            ----------
+              string
+            ----------
+    """
+    return (width-1)//2 - (string_length-1) // 2
 
 
 def draw_board(header: str, guesses: list[str], hidden_word: str) -> None:
     # Head.
     head = ansi.create_color_code(header, ansi.RED_FG)
-    padding = calculate_padding(header, WIDTH)
-    print(" " * padding + head)
+    heading_padding = calculate_padding(len(header), WIDTH)
+    print(" " * heading_padding + head)
 
     # Guesses.
+    padding  = calculate_padding(WORD_LENGTH, WIDTH)
     for guess in guesses:
         row = ""
         guess_result = check_guess(guess, hidden_word)
@@ -70,18 +117,18 @@ def draw_board(header: str, guesses: list[str], hidden_word: str) -> None:
                 )
             elif result == WRONG:
                 row += letter.upper()
-        padding = calculate_padding(guess, WIDTH)
         print(" " * padding + row)
 
     # Pad wtih blank rows for guesses not yet made.
     if len(guesses) < MAX_GUESSES:
         for _ in range(MAX_GUESSES - len(guesses)):
-            print(("_"*5).center(WIDTH))
+            print(("_"*WORD_LENGTH).center(WIDTH))
 
 
 def main() -> None:
     # Set up game.
-    hidden_word = get_hidden_word(WORDS)
+    words = read_words(WORDS)
+    hidden_word = get_hidden_word(words)
     guesses = MAX_GUESSES
     prev_guesses = []
     guess_nr = 1  # Keep track of round.
@@ -90,7 +137,7 @@ def main() -> None:
     # Game loop.
     while guesses:
         # Take guess from user.
-        guess = get_user_input()
+        guess = get_user_input(words)
         prev_guesses.append(guess)
 
         # Redraw board and print current state.
@@ -102,10 +149,11 @@ def main() -> None:
 
         # Check if win.
         if guess == hidden_word:
-            print("You win!")
+            print(WIN.format(hidden_word))
             break
     else:
-        print("You lose!")
+        print(LOSE.format(hidden_word))
 
 
-main()
+if __name__ == "__main__":
+    main()
