@@ -45,12 +45,31 @@ def check_guess(guess: str, word: str) -> list[int]:
         WRONG
             Letter is wrong.
     """
-    return [
-        OK if letter_in_guess == letter_in_word
-        else WRONG_PLACE if letter_in_guess in word
-        else WRONG
-        for letter_in_guess, letter_in_word in zip(guess, word)
-    ]
+    letters_in_word = list(word)
+    status = []  # Status of letters, OK, WRONG_PLACE or WRONG.
+
+    # Check if letter is in correct spot.
+    for letter_in_guess, letter_in_word in zip(guess, word):
+        # If letter is in correct slot, mark it as OK and remove it from
+        # letters_in_word to not count it again if guess uses the letter
+        # two times.
+        if letter_in_guess == letter_in_word:
+            letters_in_word.remove(letter_in_word)
+            status.append(OK)
+        else:
+            # Else mark it as WRONG for now.
+            status.append(WRONG)
+
+    # Check if letter that is not in correct spot is in hidden word.
+    for index, (letter_in_guess, letter_status) in enumerate(zip(guess, status)):
+        # If letter is not marked as OK, check if it occurs in word at
+        # other location, and has not yet been accounted for (either as
+        # OK or WRONG_PLACE, i.e. still exists in letters_in_word.).
+        if letter_status == WRONG:
+            if letter_in_guess in letters_in_word:
+                status[index] = WRONG_PLACE
+                letters_in_word.remove(letter_in_guess)
+    return status
 
 
 def get_user_input(words: list[str]) -> str:
