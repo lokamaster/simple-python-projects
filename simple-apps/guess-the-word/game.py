@@ -1,4 +1,5 @@
 import random
+
 import ansi
 
 
@@ -102,21 +103,21 @@ def draw_board(header: str, guesses: list[str], hidden_word: str) -> None:
     for guess in guesses:
         row = ""
         guess_result = check_guess(guess, hidden_word)
-        for letter, result in zip(guess, guess_result):
+        for letter, result in zip(guess.upper(), guess_result):
             if result == OK:
                 row += ansi.create_color_code(
-                    letter.upper(),
+                    letter,
                     ansi.WHITE_FG,
                     ansi.GREEN_BG,
                 )
             elif result == WRONG_PLACE:
                 row += ansi.create_color_code(
-                    letter.upper(),
+                    letter,
                     ansi.WHITE_FG,
                     ansi.YELLOW_BG,
                 )
             elif result == WRONG:
-                row += letter.upper()
+                row += letter
         print(" " * padding + row)
 
     # Pad wtih blank rows for guesses not yet made.

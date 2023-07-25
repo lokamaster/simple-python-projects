@@ -1,0 +1,3 @@
+Separate game logic from drawing logic.
+Maybe turn game into a class and easier to use (e.g. game = Game(); game.run()).
+Refactor some of the longer functions.
